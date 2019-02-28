@@ -1,4 +1,3 @@
-
 import tkinter as tk
 from tkinter.filedialog import INSERT
 import tkinter.ttk as ttk
@@ -15,6 +14,7 @@ class Config_gui:
         #canvas.grid(row = 0,column = col, rowspan = 80, columnspan = 1)
         top_root = tk.Frame(self.root)
         top_root.grid(row = 0,column = col, rowspan = 80, columnspan = 1)
+        #top_root.grid_propagate(0)
         #canvas.create_window((0,0), window=top_root, anchor='w')
         return top_root
 
@@ -32,26 +32,29 @@ class Config_gui:
         self.screen_height = min(self.root.winfo_screenheight(),height)
         self.root_size = str(self.screen_width)+"x"+str(self.screen_height)
         self.root.geometry(self.root_size)
+        self.root.grid_propagate(0)
         self.menu()
         for i in range(100):
             self.root.grid_rowconfigure(i,weight=1)
-        self.origin_words="./Removed_known_words.csv"
-        columns =8
-        self.top_roots=[]
-        self.entries = []
+
         self.words=[]
+        self.origin_words="./Removed_known_words.csv"
+        self.readWords()
+
+        columns =8
+        numEntry = 30
+        self.top_roots=[]
+        self.entries_list = []
         self.show_index = 0
-        lines = 40
 
         for i in range(columns):
             self.root.grid_columnconfigure(i,weight=1)
 
         for i in range(columns):
             top_root = self.setCanvas(i)
-            self.setLayout(top_root)
-            entry = self.setPage(top_root,lines)
+            entries = self.setPage(top_root,numEntry)
             self.top_roots.append(top_root)
-            self.entries.append(entry)
+            self.entries_list.append(entries)
 
         self.fun_root = tk.Frame(self.root)
         self.fun_root.grid(row = 80,column = 0, rowspan = 20, columnspan = columns)
@@ -62,13 +65,13 @@ class Config_gui:
     def menu(self):
         self.menubar = tk.Menu(self.root,bg='dark grey')
         self.filemenu = tk.Menu(self.menubar, tearoff=0)
-        self.filemenu.add_command(label="Choose testing images")
+        self.filemenu.add_command(label="Choose testing images",command = self.changeLabel)
         self.menubar.add_cascade(label=u"\u058D"+" File", menu=self.filemenu)
         self.root.config(menu=self.menubar)
 
 
 
-    def setLayout(self,top_root):
+    def readWords(self):
         max_len = 0
         with open(self.origin_words,'r') as f:
             for line in f:
@@ -85,15 +88,20 @@ class Config_gui:
         entries = []
         for i in range(num_entry):
             v = tk.IntVar()
+            label = tk.Label(top_root,text='')
             button = ttk.Radiobutton(top_root,variable = v)
-            text = tk.Text(top_root,height=1,width=self.max_len+1)
+            text = tk.Label(top_root,width=self.max_len+1,text='to be defined',justify=tk.LEFT,relief=tk.SUNKEN,anchor=tk.W)
             #text.insert(tk.END,line.rstrip('\r\n'))
-            button.grid(row = 2*i,column = 0, rowspan = 1, columnspan = 1)
-            text.grid(row = 2*i,column = 1, rowspan = 1, columnspan = 1)
-            entries.append((button,text))
+            label.grid(row = 2*i,column = 0, rowspan = 1, columnspan = 2,sticky=tk.W)
+            button.grid(row = 2*i+1,column = 0, rowspan = 1, columnspan = 1,sticky=tk.E)
+            text.grid(row = 2*i+1,column = 1, rowspan = 1, columnspan = 1,sticky=tk.E)
+            entries.append((label,button,text))
         return entries
         
-
+    def changeLabel(self):
+        for col in self.entries_list:
+            for i in col:
+                i[0].config(text='change the value')
 
 
 
