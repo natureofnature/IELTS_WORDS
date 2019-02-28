@@ -145,15 +145,18 @@ class Config_gui:
             text.grid(row = 2*i+1,column = 1, rowspan = 1, columnspan = 1,sticky=tk.E)
             entries.append((label,button,text))
             self.dic_radio_words[text]=button
+            button.bind("<Enter>",lambda event,arg0=text:self.getMeaning(arg0))
+            button.bind("<Leave>",lambda event,arg0=text:self.leaveMeaning(arg0))
             text.bind("<Enter>",lambda event,arg0=text:self.getMeaning(arg0))
             text.bind("<Leave>",lambda event,arg0=text:self.leaveMeaning(arg0))
             button.grid_remove()
         return entries
         
     def getMeaning(self,text):
-        text.config(bg='yellow')
         self.fun_txt.delete('1.0', tk.END)
         txt = text['text']
+        if len(txt)> 0:
+            text.config(bg='yellow')
         #print(self.dic_word_meaning[txt])
         try:
             self.fun_txt.insert(tk.END,txt)
