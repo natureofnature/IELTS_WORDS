@@ -33,6 +33,7 @@ class Config_gui:
         self.root_size = str(self.screen_width)+"x"+str(self.screen_height)
         self.root.geometry(self.root_size)
         self.root.grid_propagate(0)
+        self.dic_radio_words={}
         self.menu()
         for i in range(100):
             self.root.grid_rowconfigure(i,weight=1)
@@ -67,6 +68,7 @@ class Config_gui:
         self.filemenu = tk.Menu(self.menubar, tearoff=0)
         self.filemenu.add_command(label="Choose testing images",command = self.changeLabel)
         self.menubar.add_cascade(label=u"\u058D"+" File", menu=self.filemenu)
+        self.menubar.add_command(label="Show next Page",command = self.getNextPage)
         self.root.config(menu=self.menubar)
 
 
@@ -80,6 +82,15 @@ class Config_gui:
                 max_len = max(max_len,len(line.rstrip('\r\n')))
         self.max_len = max_len 
 
+    def getNextPage(self):
+        for col in self.entries_list:
+            for i in col:
+                if self.show_index>=len(self.words):
+                    self.show_index=0
+                i[2].config(text=self.words[self.show_index])
+                self.show_index = self.show_index+1
+
+
     def setPage(self,top_root,num_entry):
         for i in range(100):
             top_root.grid_rowconfigure(i,weight=1)
@@ -90,12 +101,13 @@ class Config_gui:
             v = tk.IntVar()
             label = tk.Label(top_root,text='')
             button = ttk.Radiobutton(top_root,variable = v)
-            text = tk.Label(top_root,width=self.max_len+1,text='to be defined',justify=tk.LEFT,relief=tk.SUNKEN,anchor=tk.W)
+            text = tk.Label(top_root,width=self.max_len+1,text='',justify=tk.LEFT,anchor=tk.W)
             #text.insert(tk.END,line.rstrip('\r\n'))
             label.grid(row = 2*i,column = 0, rowspan = 1, columnspan = 2,sticky=tk.W)
             button.grid(row = 2*i+1,column = 0, rowspan = 1, columnspan = 1,sticky=tk.E)
             text.grid(row = 2*i+1,column = 1, rowspan = 1, columnspan = 1,sticky=tk.E)
             entries.append((label,button,text))
+            self.dic_radio_words[button]=text
         return entries
         
     def changeLabel(self):
