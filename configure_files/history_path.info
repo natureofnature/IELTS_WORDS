@@ -1,0 +1,14 @@
+checkpoint:->/srv/data/hdd/wzliu_on_hdd/m3_training_dir_Nov_mid/checkpoints/model.ckpt-189491
+image_path:->/home/nature/Desktop/temp_test
+Undetected_img_path:->/media/hdd/Datasets/test_result/ok
+Detected_img_path:->/media/hdd/Datasets/test_result/ng
+Save_img_root_path:->/home/nature/Desktop/123
+Save_img_ori_root_path:->/dev/shm/tests
+Template_file:->/home/nature/GUI_tool/Tensorflow_viewer_v2.8/projects/M80
+Error_cropping_path:->/media/hdd/Datasets/test_result/err
+LOG_PATH:->/home/nature/GUI_tool/Tensorflow_viewer_v1.1/Logs
+Save_original_img_path_NG:->/dev/shm/tests/NG
+Save_original_img_path_OK:->/dev/shm/tests/OK
+Save_original_img_path_ERR:->/dev/shm/tests/ERR
+root_bar_code:->./barcodes
+root_project_folder:->/home/nature/GUI_tool/Tensorflow_viewer_v2.8/projects/GIJ900

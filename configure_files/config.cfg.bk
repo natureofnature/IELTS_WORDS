@@ -1,0 +1,32 @@
+#Configuration of GUI display settings
+width:->1920
+height:->1080
+scaling_factor:->1.5
+keyboardspeed_x:->3 
+keyboardspeed_y:->3 
+canvas_height:->2000
+canvas_width:->2000
+full_screen:->0 
+font_size:->8 
+left_right_ratio:->0.8 
+other_picture_search_path:->/home/nature/SSD-Tensorflow/detect_result_for_OK_2
+bounding_box_color:->yellow
+background_color:->light yellow
+random_preview_mode:->no
+number_classes:->2
+#device and threads settings for performance reasons
+//num_devices:->2
+num_devices:->1
+num_threads_per_GPU:->1
+threads_reading_images:->4
+//threads_reading_images:->4
+threads_cropping_images:->10
+threads_saving_images:->2
+#sql ip address
+sql_ip_address:->localhost
+//sql_ip_address:->10.10.64.91
+#file management
+#yes or no
+remove_original_files:->yes
+numbers_trial_for_reading_incomplete_images:->20
+use_mysql:->yes
