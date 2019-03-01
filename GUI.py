@@ -1,9 +1,12 @@
 import tkinter as tk
+from tkinter import filedialog
 from tkinter.filedialog import INSERT
 import tkinter.ttk as ttk
 from tkinter import Tk,Frame,Button,OptionMenu,ttk,Label,Text,filedialog
 from tkinter import ttk,StringVar,OptionMenu,Frame,Scrollbar,VERTICAL,Y,X,HORIZONTAL,LEFT,RIGHT,FALSE,BOTTOM,Canvas,BOTH,TRUE,NW
 from Configure import getConfig,getLastDialogue,setPath,setConfig
+import datetime
+
 
 
 class Config_gui:
@@ -47,9 +50,10 @@ class Config_gui:
         self.origin_words="./Removed_known_words.csv"
         self.meaning_file="./full.txt"
         self.readWords()
+        self.readDict()
 
         columns =6
-        numEntry = 30
+        numEntry = 20
         self.top_roots=[]
         self.entries_list = []
         self.show_index = 0
@@ -83,15 +87,25 @@ class Config_gui:
     def menu(self):
         self.menubar = tk.Menu(self.root,bg='dark grey')
         self.filemenu = tk.Menu(self.menubar, tearoff=0)
-        self.filemenu.add_command(label="Choose testing images",command = self.changeLabel)
+        self.filemenu.add_command(label="Choose word file",command = self.chooseWordFile)
         self.menubar.add_cascade(label=u"\u058D"+" File", menu=self.filemenu)
         self.menubar.add_command(label="Show next Page",command = self.getNextPage)
         self.menubar.add_command(label="Aggregate words",command = self.getNextPage)
+        self.menubar.add_command(label="Save Word List",command = self.SaveWordList)
         self.root.config(menu=self.menubar)
 
+    def SaveWordList(self):
+        now = datetime.datetime.now()
+        filename = now.strftime("%Y-%m-%d-%H-%M-")
+        filename = str(filename)+str(20000-len(self.words))+'.txt'
+        with open(filename,'w') as f:
+          for line in self.words:
+            f.write(line+'\n')
+        
 
 
     def readWords(self):
+        del(self.words[:])
         max_len = 0
         with open(self.origin_words,'r') as f:
             for line in f:
@@ -99,6 +113,8 @@ class Config_gui:
                 self.words.append(word)
                 max_len = max(max_len,len(line.rstrip('\r\n')))
         self.max_len = max_len 
+        self.show_index=0
+    def readDict(self):
         with open(self.meaning_file,'r') as f:
             for line in f:
                 pair = line.rstrip('\r\n')
@@ -167,10 +183,14 @@ class Config_gui:
         text.config(bg='dark sea green')
         
 
-    def changeLabel(self):
-        for col in self.entries_list:
-            for i in col:
-                i[0].config(text='change the value')
+    def chooseWordFile(self):
+        file_name = None 
+        while file_name is None or len(file_name) == 0:
+          file_name = filedialog.askopenfilename(initialdir = "./",title = "Select file",filetypes = (("word files","*.txt"),("data files","*.csv"),("all files","*.*")))
+        self.origin_words = file_name
+        self.readWords()
+
+        
 
     def deleteWord(self,text):
         txt = text['text']
