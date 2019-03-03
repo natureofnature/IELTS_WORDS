@@ -1,4 +1,5 @@
 import tkinter as tk
+import os
 from tkinter import filedialog
 from tkinter.filedialog import INSERT
 import tkinter.ttk as ttk
@@ -6,6 +7,7 @@ from tkinter import Tk,Frame,Button,OptionMenu,ttk,Label,Text,filedialog
 from tkinter import ttk,StringVar,OptionMenu,Frame,Scrollbar,VERTICAL,Y,X,HORIZONTAL,LEFT,RIGHT,FALSE,BOTTOM,Canvas,BOTH,TRUE,NW
 from Configure import getConfig,getLastDialogue,setPath,setConfig
 import datetime
+len_ielts=3611
 
 
 
@@ -47,8 +49,9 @@ class Config_gui:
         self.root.grid_columnconfigure(0,weight=1)
 
         self.words=[]
-        self.origin_words="./Removed_known_words.csv"
-        self.meaning_file="./full.txt"
+        self.dir_words='./words'
+        self.origin_words=os.path.join(self.dir_words,"./Ielts.csv")
+        self.dictionary_file=os.path.join(self.dir_words,"./Ielts.dic")
         self.readWords()
         self.readDict()
 
@@ -89,15 +92,17 @@ class Config_gui:
         self.filemenu = tk.Menu(self.menubar, tearoff=0)
         self.filemenu.add_command(label="Choose word file",command = self.chooseWordFile)
         self.menubar.add_cascade(label=u"\u058D"+" File", menu=self.filemenu)
-        self.menubar.add_command(label="Show next Page",command = self.getNextPage)
-        self.menubar.add_command(label="Aggregate words",command = self.aggregate)
-        self.menubar.add_command(label="Save Word List",command = self.SaveWordList)
+        self.menubar.add_command(label=u"\u25B6"+" Show next Page",command = self.getNextPage)
+        self.menubar.add_command(label=u"\u047A"+" Aggregate words",command = self.aggregate)
+        self.menubar.add_command(label=u"\u0CF1"+" Save Word List",command = self.SaveWordList)
         self.root.config(menu=self.menubar)
 
     def SaveWordList(self):
+        global len_ielts
         now = datetime.datetime.now()
         filename = now.strftime("%Y-%m-%d-%H-%M-")
-        filename = str(filename)+str(20000-len(self.words))+'.txt'
+        filename = str(filename)+str(len_ielts-len(self.words))+'.txt'
+        filename = os.path.join(self.dir_words,filename)
         with open(filename,'w') as f:
           for line in self.words:
             f.write(line+'\n')
@@ -115,7 +120,7 @@ class Config_gui:
         self.max_len = max_len 
         self.show_index=0
     def readDict(self):
-        with open(self.meaning_file,'r') as f:
+        with open(self.dictionary_file,'r') as f:
             for line in f:
                 pair = line.rstrip('\r\n')
                 word = pair.split('`')[0]
@@ -215,7 +220,7 @@ class Config_gui:
     def chooseWordFile(self):
         file_name = None 
         while file_name is None or len(file_name) == 0:
-          file_name = filedialog.askopenfilename(initialdir = "./",title = "Select file",filetypes = (("word files","*.txt"),("data files","*.csv"),("all files","*.*")))
+          file_name = filedialog.askopenfilename(initialdir = self.dir_words,title = "Select file",filetypes = (("word files","*.txt"),("data files","*.csv"),("all files","*.*")))
         self.origin_words = file_name
         self.readWords()
 

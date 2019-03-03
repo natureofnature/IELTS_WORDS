@@ -1,5 +1,3 @@
-abandon   
-abate     
 abhorrent 
 abide     
 ability
@@ -18,6 +16,10 @@ abuse
 academic  
 accelerate 
 acceptable
+access
+accessible 
+accessory
+acclaim
 acclimatise
 accommodation
 accompany 
