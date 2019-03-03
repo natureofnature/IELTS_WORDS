@@ -55,7 +55,7 @@ class Config_gui:
         columns =6
         numEntry = 20
         self.top_roots=[]
-        self.entries_list = []
+        self.entries_list = [] #col|col|...
         self.show_index = 0
 
 
@@ -90,7 +90,7 @@ class Config_gui:
         self.filemenu.add_command(label="Choose word file",command = self.chooseWordFile)
         self.menubar.add_cascade(label=u"\u058D"+" File", menu=self.filemenu)
         self.menubar.add_command(label="Show next Page",command = self.getNextPage)
-        self.menubar.add_command(label="Aggregate words",command = self.getNextPage)
+        self.menubar.add_command(label="Aggregate words",command = self.aggregate)
         self.menubar.add_command(label="Save Word List",command = self.SaveWordList)
         self.root.config(menu=self.menubar)
 
@@ -167,12 +167,41 @@ class Config_gui:
             text.bind("<Leave>",lambda event,arg0=text:self.leaveMeaning(arg0))
             button.grid_remove()
         return entries
+
+
+    def aggregate(self):
+        words_on_page=[]
+        for entries in self.entries_list:
+            for pair in entries:
+                text = pair[2]
+                if len(text['text'])>0:
+                    words_on_page.append(text['text'])
+                text.config(text='')
+
+        index = 0
+        for i in self.vs:
+            i.set(None)
+        for entries in self.entries_list:
+            for pair in entries:
+                text = pair[2]
+                button = self.dic_radio_words[text]
+                if index >= len(words_on_page):
+                    button.grid_remove()
+                else:
+                    button.grid()
+                    text.config(text=words_on_page[index])
+                index = index+1
+
+
+
         
     def getMeaning(self,text):
         self.fun_txt.delete('1.0', tk.END)
         txt = text['text']
         if len(txt)> 0:
             text.config(bg='yellow')
+        else:
+            return
         #print(self.dic_word_meaning[txt])
         try:
             self.fun_txt.insert(tk.END,txt)
