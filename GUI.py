@@ -1,5 +1,6 @@
 import tkinter as tk
 import webbrowser
+from selenium import webdriver
 import os
 from tkinter import filedialog
 from tkinter.filedialog import INSERT
@@ -9,6 +10,7 @@ from tkinter import ttk,StringVar,OptionMenu,Frame,Scrollbar,VERTICAL,Y,X,HORIZO
 from Configure import getConfig,getLastDialogue,setPath,setConfig
 import datetime
 len_ielts=3611
+PATH_TO_DRIVER ='./chromedriver'
 
 
 
@@ -36,6 +38,7 @@ class Config_gui:
         self.max_len = 0
         width = int(self.dic['width'])
         height = int(self.dic['height'])
+        self.backend = self.dic['backend']
         self.screen_width = min(self.root.winfo_screenwidth(),width)
         self.screen_height = min(self.root.winfo_screenheight(),height)
         self.root_size = str(self.screen_width)+"x"+str(self.screen_height)
@@ -88,6 +91,12 @@ class Config_gui:
             entries = self.setPage(top_root,numEntry)
             self.top_roots.append(top_root)
             self.entries_list.append(entries)
+
+        if self.backend== 'selenium':
+            chrome_options = webdriver.ChromeOptions()
+            chrome_options.add_argument("--disable-infobars")
+            self.browser = webdriver.Chrome(PATH_TO_DRIVER,chrome_options = chrome_options)
+            self.browser.set_window_position(0,0)
 
 
         self.root.mainloop()
@@ -197,7 +206,12 @@ class Config_gui:
       self.root.clipboard_clear()
       self.root.clipboard_append(txt)
       url = self.url[1]+txt
-      webbrowser.open(url)
+      if self.backend== 'selenium':
+        global PATH_TO_DRIVER
+        self.browser.get(url)
+      elif self.backend == 'webbrowser':
+        webbrowser.open(url)
+
 
 
 
@@ -225,7 +239,7 @@ class Config_gui:
                     text.config(text=words_on_page[index])
                 index = index+1
 
-
+     
 
         
     def getMeaning(self,text):
