@@ -55,7 +55,7 @@ class Config_gui:
         self.dir_words='./words'
         self.origin_words=os.path.join(self.dir_words,"./Ielts.csv")
         self.dictionary_file=os.path.join(self.dir_words,"./Ielts.dic")
-        self.readWords()
+        #self.readWords()
         self.readDict()
         self.url_longman='https://www.ldoceonline.com/dictionary/'
         self.url_oxford='https://dictionary.cambridge.org/zhs/词典/英语-汉语-简体/'
@@ -159,13 +159,15 @@ class Config_gui:
 
 
     def getNextPage(self):
+        if len(self.words) == 0:
+          self.chooseWordFile()
         for i in self.vs:
             i.set(None)
         for col in self.entries_list:
             for i in col:
                 if self.show_index>=len(self.words):
                     self.show_index=0
-                i[2].config(text=self.words[self.show_index])
+                i[2].config(text=self.words[self.show_index],width=self.max_len+1)
                 i[1].grid()
                 self.show_index = self.show_index+1
 
@@ -274,6 +276,8 @@ class Config_gui:
         text.config(text='')
         button = self.dic_radio_words[text]
         button.grid_remove()
+        self.root.title(str(len(self.words))+" words to learn")
+
 
 
 
