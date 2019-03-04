@@ -1,4 +1,5 @@
 import tkinter as tk
+import webbrowser
 import os
 from tkinter import filedialog
 from tkinter.filedialog import INSERT
@@ -54,6 +55,11 @@ class Config_gui:
         self.dictionary_file=os.path.join(self.dir_words,"./Ielts.dic")
         self.readWords()
         self.readDict()
+        self.url_longman='https://www.ldoceonline.com/dictionary/'
+        self.url_oxford='https://dictionary.cambridge.org/zhs/词典/英语-汉语-简体/'
+        self.urls = [self.url_longman,self.url_oxford]
+        self.url_index = 0
+        self.url = self.urls[self.url_index]
 
         columns =6
         numEntry = 20
@@ -95,7 +101,12 @@ class Config_gui:
         self.menubar.add_command(label=u"\u25B6"+" Show next Page",command = self.getNextPage)
         self.menubar.add_command(label=u"\u047A"+" Aggregate words",command = self.aggregate)
         self.menubar.add_command(label=u"\u0CF1"+" Save Word List",command = self.SaveWordList)
+        self.menubar.add_command(label=u"\u0CF1"+" Switch dic",command = self.switchDic)
         self.root.config(menu=self.menubar)
+    def switchDic(self):
+        self.url_index = (self.url_index + 1)%(len(self.urls))
+        self.url=self.urls[self.url_index]
+        
 
     def SaveWordList(self):
         global len_ielts
@@ -170,8 +181,20 @@ class Config_gui:
             button.bind("<Leave>",lambda event,arg0=text:self.leaveMeaning(arg0))
             text.bind("<Enter>",lambda event,arg0=text:self.getMeaning(arg0))
             text.bind("<Leave>",lambda event,arg0=text:self.leaveMeaning(arg0))
+            text.bind("<Button-1>", lambda event,arg0=text:self.clickWords(arg0))
             button.grid_remove()
         return entries
+
+    def clickWords(self,text):
+      txt = text['text']
+      if len(txt) == 0:
+        return
+      self.root.clipboard_clear()
+      self.root.clipboard_append(txt)
+      url = self.url+txt
+      webbrowser.open(url)
+
+
 
 
     def aggregate(self):
