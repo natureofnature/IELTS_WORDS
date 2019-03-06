@@ -60,9 +60,9 @@ class Config_gui:
         self.url_longman='https://www.ldoceonline.com/dictionary/'
         self.url_oxford='https://dictionary.cambridge.org/zhs/词典/英语-汉语-简体/'
         self.url_youdao='http://www.youdao.com/w/eng/'
-        self.urls = {'Longman':self.url_longman,'Oxford':self.url_oxford,'youdao':self.url_youdao}
+        self.urls = {'Longman':self.url_longman,'Cambridge':self.url_oxford,'youdao':self.url_youdao}
         self.url_index = 0
-        self.url = self.urls["Oxford"]
+        self.url = self.urls["Cambridge"]
         self.menu()
 
         columns =6
@@ -114,7 +114,7 @@ class Config_gui:
         #self.menubar.add_command(label=u"\u07F7"+" Switch dic (Current using "+dic_name+")",command = lambda:self.switchDic(self.menubar))
 
         self.menudic= tk.Menu(self.menubar, tearoff=0)
-        self.menudic.add_command(label="Use Oxford Dic",command = lambda:self.switchDic(self.menubar,"Oxford"))
+        self.menudic.add_command(label="Use Cambridge Dic",command = lambda:self.switchDic(self.menubar,"Cambridge"))
         self.menudic.add_command(label="Use Langman Dic",command = lambda: self.switchDic(self.menubar,"Longman"))
         self.menudic.add_command(label="Use Youdao Dic",command = lambda:self.switchDic(self.menubar,"youdao"))
         self.menubar.add_cascade(label="Choose Dic",menu = self.menudic)
