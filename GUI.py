@@ -59,9 +59,10 @@ class Config_gui:
         self.readDict()
         self.url_longman='https://www.ldoceonline.com/dictionary/'
         self.url_oxford='https://dictionary.cambridge.org/zhs/词典/英语-汉语-简体/'
-        self.urls = [('Longman',self.url_longman),('Oxford',self.url_oxford)]
+        self.url_youdao='http://www.youdao.com/w/eng/'
+        self.urls = {'Longman':self.url_longman,'Oxford':self.url_oxford,'youdao':self.url_youdao}
         self.url_index = 0
-        self.url = self.urls[self.url_index]
+        self.url = self.urls["Oxford"]
         self.menu()
 
         columns =6
@@ -106,20 +107,25 @@ class Config_gui:
         self.menubar = tk.Menu(self.root,bg='dark grey')
         self.filemenu = tk.Menu(self.menubar, tearoff=0)
         self.filemenu.add_command(label="Choose word file",command = self.chooseWordFile)
+        self.filemenu.add_command(label=u"\u0CF1"+" Save Word List",command = self.SaveWordList)
         self.menubar.add_cascade(label=u"\u058D"+" File", menu=self.filemenu)
         self.menubar.add_command(label=u"\u25B6"+" Show next Page",command = self.getNextPage)
         self.menubar.add_command(label=u"\u047A"+" Aggregate words",command = self.aggregate)
-        self.menubar.add_command(label=u"\u0CF1"+" Save Word List",command = self.SaveWordList)
-        self.url=self.urls[self.url_index]
-        dic_name = self.url[0]
-        self.menubar.add_command(label=u"\u07F7"+" Switch dic (Current using "+dic_name+")",command = lambda:self.switchDic(self.menubar))
-        self.root.config(menu=self.menubar)
-    def switchDic(self,menubar):
-        self.url_index = (self.url_index + 1)%(len(self.urls))
-        self.url=self.urls[self.url_index]
-        dic_name = self.url[0]
-        menubar.entryconfigure(5, label=u"\u07F7"+" Switch dic (Current using "+dic_name+")")
+        #self.menubar.add_command(label=u"\u07F7"+" Switch dic (Current using "+dic_name+")",command = lambda:self.switchDic(self.menubar))
 
+        self.menudic= tk.Menu(self.menubar, tearoff=0)
+        self.menudic.add_command(label="Use Oxford Dic",command = lambda:self.switchDic(self.menubar,"Oxford"))
+        self.menudic.add_command(label="Use Langman Dic",command = lambda: self.switchDic(self.menubar,"Longman"))
+        self.menudic.add_command(label="Use Youdao Dic",command = lambda:self.switchDic(self.menubar,"youdao"))
+        self.menubar.add_cascade(label="Choose Dic",menu = self.menudic)
+
+        self.root.config(menu=self.menubar)
+
+
+    def switchDic(self,menubar,dic_name):
+        self.url = self.urls[dic_name]
+        print(self.url)
+        menubar.entryconfigure(4, label=u"\u07F7"+" Choose Dic (Current using "+dic_name+")")
         
 
     def SaveWordList(self):
@@ -207,7 +213,8 @@ class Config_gui:
         return
       self.root.clipboard_clear()
       self.root.clipboard_append(txt)
-      url = self.url[1]+txt
+      url = self.url+txt
+      print(url)
       if self.backend== 'selenium':
         global PATH_TO_DRIVER
         self.browser.get(url)
