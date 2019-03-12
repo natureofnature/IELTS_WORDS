@@ -1,11 +1,16 @@
 import sys
 import os
-sys.path.append("DSSD_Tensorflow/nets")
-path_file = "./configure_files/history_path.info"
+import sys
+if getattr(sys, 'frozen', False):
+    working_dir= os.path.dirname(sys.executable)
+elif __file__:
+    working_dir = os.path.dirname(__file__)
+path_file = os.path.join(working_dir,"./configure_files/history_path.info")
 path_dics = {}
 
 def getConfig():
-    config = "./configure_files/config.cfg"
+    global working_dir
+    config = os.path.join(working_dir,"./configure_files/config.cfg")
     width = 0 
     height = 0 
     dic = {}
@@ -17,7 +22,8 @@ def getConfig():
             dic.update({tmp[0]:tmp[1]})
     return dic
 def setConfig(dic,key,value):
-    config = "./configure_files/config.cfg"
+    global working_dir
+    config = os.path.join(working_dir,"./configure_files/config.cfg")
     dic[key] = value
     with open(config,'w') as f:
         for k,v in dic.items():

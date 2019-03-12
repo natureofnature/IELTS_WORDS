@@ -9,8 +9,15 @@ from tkinter import Tk,Frame,Button,OptionMenu,ttk,Label,Text,filedialog
 from tkinter import ttk,StringVar,OptionMenu,Frame,Scrollbar,VERTICAL,Y,X,HORIZONTAL,LEFT,RIGHT,FALSE,BOTTOM,Canvas,BOTH,TRUE,NW
 from Configure import getConfig,getLastDialogue,setPath,setConfig
 import datetime
+import inspect
+#working_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+import sys
+if getattr(sys, 'frozen', False):
+    working_dir= os.path.dirname(sys.executable)
+elif __file__:
+    working_dir = os.path.dirname(__file__)
 len_ielts=3611
-PATH_TO_DRIVER ='./chromedriver'
+PATH_TO_DRIVER =os.path.join(working_dir,'./chromedriver')
 
 
 
@@ -21,6 +28,7 @@ class Config_gui:
         return top_root
 
     def __init__(self):
+        global working_dir
         self.attributes = { 'Noun':'n.',
                             'Verb':'v.',
                             'Adverb':'adv.',
@@ -52,7 +60,7 @@ class Config_gui:
         self.root.grid_columnconfigure(0,weight=1)
 
         self.words=[]
-        self.dir_words='./words'
+        self.dir_words=os.path.join(working_dir,'./words')
         self.origin_words=os.path.join(self.dir_words,"./Ielts.csv")
         self.dictionary_file=os.path.join(self.dir_words,"./Ielts.dic")
         #self.readWords()
@@ -214,7 +222,7 @@ class Config_gui:
       self.root.clipboard_clear()
       self.root.clipboard_append(txt)
       url = self.url+txt
-      print(url)
+      #print(url)
       if self.backend== 'selenium':
         global PATH_TO_DRIVER
         self.browser.get(url)
