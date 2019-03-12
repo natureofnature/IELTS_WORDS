@@ -125,6 +125,9 @@ class Config_gui:
         self.menudic.add_command(label="Use Cambridge Dic",command = lambda:self.switchDic(self.menubar,"Cambridge"))
         self.menudic.add_command(label="Use Langman Dic",command = lambda: self.switchDic(self.menubar,"Longman"))
         self.menudic.add_command(label="Use Youdao Dic",command = lambda:self.switchDic(self.menubar,"youdao"))
+        self.root.bind(1,lambda event, menubar=self.menubar, dic_to_use="Cambridge":self.switchDic(menubar,dic_to_use))
+        self.root.bind(2,lambda event, menubar=self.menubar, dic_to_use="Longman":self.switchDic(menubar,dic_to_use))
+        self.root.bind(3,lambda event, menubar=self.menubar, dic_to_use="youdao":self.switchDic(menubar,dic_to_use))
         self.menubar.add_cascade(label="Choose Dic",menu = self.menudic)
 
         self.root.config(menu=self.menubar)
@@ -199,7 +202,7 @@ class Config_gui:
             v = tk.IntVar()
             self.vs.append(v)
             label = tk.Label(top_root,text='',bg='dark sea green')
-            text = tk.Label(top_root,width=self.max_len+1,text='',justify=tk.LEFT,anchor=tk.W,bg='dark sea green',fg='black')
+            text = tk.Label(top_root,width=self.max_len+1,text='',justify=tk.LEFT,anchor=tk.W,bg='dark sea green',fg='black',font=(18))
             button = ttk.Radiobutton(top_root,variable = v,command = lambda arg0=text:self.deleteWord(arg0),style='TCheckbutton')
             #text.insert(tk.END,line.rstrip('\r\n'))
             label.grid(row = 2*i,column = 0, rowspan = 1, columnspan = 2,sticky=tk.W)
@@ -207,6 +210,7 @@ class Config_gui:
             text.grid(row = 2*i+1,column = 1, rowspan = 1, columnspan = 1,sticky=tk.E)
             entries.append((label,button,text))
             self.dic_radio_words[text]=button
+            button.bind("<Return>", lambda event,arg0=text:self.clickWords(arg0))
             button.bind("<Enter>",lambda event,arg0=text:self.getMeaning(arg0))
             button.bind("<Leave>",lambda event,arg0=text:self.leaveMeaning(arg0))
             text.bind("<Enter>",lambda event,arg0=text:self.getMeaning(arg0))
